@@ -1,0 +1,7 @@
+<resources>
+<style name="Theme.RBTickets" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">#0B2D5C</item>
+    <item name="colorPrimaryVariant">#071F40</item>
+    <item name="colorOnPrimary">#FFFFFF</item>
+</style>
+</resources>
