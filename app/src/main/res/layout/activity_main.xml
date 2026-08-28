@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="20dp">
+<LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+<TextView android:text="RB CONSULTING" android:textStyle="bold" android:textSize="28sp" android:textColor="#0B2D5C" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+<TextView android:text="Gestion des Tickets PRO" android:textSize="20sp" android:layout_marginBottom="24dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+<Button android:id="@+id/addTicket" android:text="Ajouter / photographier un ticket" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+<TextView android:id="@+id/chfTotal" android:text="Dépenses CHF : 0.00 CHF" android:textSize="19sp" android:textStyle="bold" android:layout_marginTop="24dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+<TextView android:id="@+id/eurTotal" android:text="Dépenses EUR : 0.00 EUR" android:textSize="19sp" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+<TextView android:text="Tickets à vérifier" android:textSize="18sp" android:textStyle="bold" android:layout_marginTop="28dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+<TextView android:id="@+id/result" android:text="Aucun ticket." android:layout_marginTop="8dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</LinearLayout></ScrollView>
