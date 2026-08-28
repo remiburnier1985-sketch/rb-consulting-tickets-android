@@ -1,26 +1,67 @@
-name: Build RB Consulting Tickets APK
+name: Build and test RB Consulting Tickets APK
+
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
-  build:
+  build-test-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+
+      - name: Static checks
+        run: gradle lintDebug testDebugUnitTest
+
       - name: Build APK
         run: gradle assembleDebug
+
       - name: Rename APK
         run: cp app/build/outputs/apk/debug/app-debug.apk RB-Consulting-Tickets.apk
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Install and launch on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            adb install -r RB-Consulting-Tickets.apk
+            adb shell am start -W -n ch.rbconsulting.tickets.v2/ch.rbconsulting.tickets.MainActivity
+            sleep 3
+            adb shell dumpsys activity activities | grep -q 'ch.rbconsulting.tickets.v2/ch.rbconsulting.tickets.MainActivity'
+            adb shell pidof ch.rbconsulting.tickets.v2
+
       - uses: actions/upload-artifact@v4
         with:
           name: RB-Consulting-Tickets-Android
           path: RB-Consulting-Tickets.apk
           retention-days: 30
+
+      - name: Publish direct-download release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" RB-Consulting-Tickets.apk --title "RB Consulting Tickets $TAG" --notes "APK Android valide par compilation, lint, installation et lancement sur emulateur Android API 35." --latest
